@@ -3,10 +3,15 @@ require('dotenv').config();
 const mongoose= require('mongoose');
 const app = express();
 
+// import categories router
+const categoriesRoutes = require('./routes/categories');
+
+
+
 //ler os corpos da requisição
 app.use(express.json());
 // importar os models
-const Category = require('./models/category');
+app.use('/api/categories',categoriesRoutes);
 
 
 
@@ -34,28 +39,7 @@ app.get('/',(req,res)=>{
 
 
 
-app.get('/api/categories',async (req,res,next)=>{
-  try {
-      const categories= await Category.find();
-      res.status(200).json({data:categories});
-  } catch (error) {
-      next(error)
-  }
-})
 
-
-
-
-app.post('/api/categories',async (req,res,next)=>{
-
-    try {
-        const category =await new Category(req.body).save()
-        res.status(200).json({data:category});
-    } catch (error) {
-        console.log('erro simples');
-        next(error); //enviamos o error pra pro próximo middleware
-    }
-})
 
 
 app.use((err,req,res,next)=>{
